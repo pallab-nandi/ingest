@@ -112,7 +112,7 @@ class LeadGenerateEmailView(generics.UpdateAPIView):
         
         # Generate a personalized email for the lead
         email_generator = EmailGenerator()
-        response = email_generator.generate_personalized_email(lead.name , lead.summary_of_website)
+        response = email_generator.generate_personalized_email(lead.name, lead.website_title, lead.website_metadata, lead.summary_of_website)
 
         # Update the lead object with the personalized email text
         lead.personalized_email_text = response
