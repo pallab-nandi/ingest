@@ -30,7 +30,8 @@ class EmailGenerator:
                                     - Keep it concise (3-4 paragraphs)
                                     - Sound professional and engaging
                                     - Reference specific details from the website summary
-                                    - Include a clear call-to-action"""
+                                    - Include a clear call-to-action
+                                    - At the end add 'Best Regards, Ingest Team'"""
                     }
                 ]
             )
