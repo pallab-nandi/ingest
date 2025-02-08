@@ -1,0 +1,7 @@
+Django
+djangorestframework
+requests
+beautifulsoup4
+anthropic
+python-dotenv
+pandas

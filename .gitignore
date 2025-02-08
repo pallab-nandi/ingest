@@ -1,0 +1,42 @@
+# Python Virtual Environment
+venv/
+*.env
+.env
+.venv
+
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Sensitive Configuration
+secrets.json
+
+# Dependencies
+*.egg-info/
+dist/
+build/
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Sensitive Logs and Temporary Files
+*.log
+temp/
