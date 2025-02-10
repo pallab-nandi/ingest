@@ -1,5 +1,18 @@
 from django.urls import path
-from .views import LeadListCreateView, LeadRetrieveUpdateView, LeadAnalyzeView, LeadGenerateEmailView, LeadSendEmailView, LeadScraperView, BulkLeadListCreateView
+from .views import (
+    LeadListCreateView,
+    LeadRetrieveUpdateView,
+    LeadAnalyzeView,
+    LeadGenerateEmailView,
+    LeadSendEmailView,
+    LeadScraperView,
+    BulkLeadListCreateView
+)
+from .auth_views import (
+    RegisterView,
+    LoginView,
+    LogoutView
+)
 
 app_name = 'ingest_be'
 
@@ -24,4 +37,15 @@ urlpatterns = [
 
     # Send Email [method: PUT]
     path('leads/<int:pk>/send_email', LeadSendEmailView.as_view(), name='lead-send-email'),
+
+    # USER AUTHENTICATION
+
+    # Register User [method: POST]
+    path('register', RegisterView.as_view(), name='register'),
+
+    # Login User [method: POST]
+    path('login', LoginView.as_view(), name='login'),
+
+    # Logout User [method: POST]
+    path('logout', LogoutView.as_view(), name='logout'),
 ]

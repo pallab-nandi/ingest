@@ -1,5 +1,6 @@
 Django
 djangorestframework
+djangorestframework-simplejwt
 requests
 beautifulsoup4
 anthropic
