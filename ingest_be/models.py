@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class Lead(models.Model):
 
@@ -13,6 +14,7 @@ class Lead(models.Model):
         ('completed', 'Completed')
     ]
 
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     website_url = models.URLField()

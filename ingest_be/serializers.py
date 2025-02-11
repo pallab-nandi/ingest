@@ -7,6 +7,16 @@ class LeadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lead
         fields = '__all__'
+        extra_kwargs = {
+            'user_id': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        request = self.context.get('request', None)
+        if request and hasattr(request, 'user'):
+            validated_data['user_id'] = request.user
+        
+        return super().create(validated_data)
 
 
 # User Serializer

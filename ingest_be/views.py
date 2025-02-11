@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAuthenticated
 import pandas as pd
 from .models import Lead
 from .serializers import LeadSerializer
@@ -14,8 +15,20 @@ from .services.ai_analyzer import AIAnalyzer
 # Creating a class to list and create leads
 # This class will handle the GET and POST requests for the leads
 class LeadListCreateView(generics.ListCreateAPIView):
-    queryset = Lead.objects.all()
     serializer_class = LeadSerializer
+    permission_classes = (IsAuthenticated,)
+
+    # Authentic user can see only their leads
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Lead.objects.all()
+        return Lead.objects.filter(user_id=self.request.user)
+        
+
+    def perform_create(self, serializer):
+        print('started')
+        print(self.request.user)
+        serializer.save(user_id=self.request.user)
 
 
 # Creating a class to bulk create leads
@@ -23,6 +36,7 @@ class LeadListCreateView(generics.ListCreateAPIView):
 class BulkLeadListCreateView(generics.CreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = LeadSerializer
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         file = request.FILES.get('file')
@@ -31,7 +45,14 @@ class BulkLeadListCreateView(generics.CreateAPIView):
 
         # Read the CSV file and create Lead objects
         df = pd.read_csv(file)
-        leads = [Lead(name=row['name'], email=row['email'], website_url=row['website_url']) for _, row in df.iterrows()]
+        leads = [
+            Lead(
+                name=row['name'],
+                email=row['email'],
+                website_url=row['website_url'],
+                user_id=request.user # Assigning user to the lead
+            ) for _, row in df.iterrows()
+        ]
 
         # Bulk create the Lead objects
         Lead.objects.bulk_create(leads)
@@ -42,15 +63,27 @@ class BulkLeadListCreateView(generics.CreateAPIView):
 # Creating a class to retrieve and update leads
 # This class will handle the GET and PUT requests for the leads
 class LeadRetrieveUpdateView(generics.RetrieveUpdateAPIView):
-    queryset = Lead.objects.all()
     serializer_class = LeadSerializer
+    permission_classes = (IsAuthenticated,)
+
+    # Authentic user can see only their leads
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Lead.objects.all()
+        return Lead.objects.filter(user_id=self.request.user)
 
 
 # Creating a class to scrape the website content of a lead
 # This class will handle the PUT request to scrape the website content
 class LeadScraperView(generics.UpdateAPIView):
-    queryset = Lead.objects.all()
     serializer_class = LeadSerializer
+    permission_classes = (IsAuthenticated,)
+
+    # Authentic user can see only their leads
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Lead.objects.all()
+        return Lead.objects.filter(user_id=self.request.user)
 
     def perform_update(self, serializer):
         lead = self.get_object()
@@ -79,8 +112,14 @@ class LeadScraperView(generics.UpdateAPIView):
 # Creating a class to analyze the website content of a lead
 # This class will handle the PUT request to analyze the website content
 class LeadAnalyzeView(generics.UpdateAPIView):
-    queryset = Lead.objects.all()
     serializer_class = LeadSerializer
+    permission_classes = (IsAuthenticated,)
+
+    # Authentic user can see only their leads
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Lead.objects.all()
+        return Lead.objects.filter(user_id=self.request.user)
 
     def perform_update(self, serializer):
         lead = self.get_object()
@@ -104,8 +143,14 @@ class LeadAnalyzeView(generics.UpdateAPIView):
 # Creating a class to generate a personalized email for a lead
 # This class will handle the PUT request to generate a personalized email
 class LeadGenerateEmailView(generics.UpdateAPIView):
-    queryset = Lead.objects.all()
     serializer_class = LeadSerializer
+    permission_classes = (IsAuthenticated,)
+
+    # Authentic user can see only their leads
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Lead.objects.all()
+        return Lead.objects.filter(user_id=self.request.user)
 
     def perform_update(self, serializer):
         lead = self.get_object()
@@ -129,8 +174,14 @@ class LeadGenerateEmailView(generics.UpdateAPIView):
 # Creating a class to send an email to a lead
 # This class will handle the PUT request to send an email to a lead
 class LeadSendEmailView(generics.UpdateAPIView):
-    queryset = Lead.objects.all()
     serializer_class = LeadSerializer
+    permission_classes = (IsAuthenticated,)
+
+    # Authentic user can see only their leads
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Lead.objects.all()
+        return Lead.objects.filter(user_id=self.request.user)
 
     # Method to send an email to the lead
     def perform_update(self, serializer):
